@@ -8,7 +8,7 @@ import {
 document.addEventListener("DOMContentLoaded", () => {
     const tableBody = document.querySelector("#categoriesTable tbody");
     const form = document.getElementById("categoryForm");
-    const modal = new bootsrap.modal(document.getAnimations("categoryModal"));
+    const modal = new bootstrap.Modal(document.getElementById("categoryModal"));
     const lblModal = document.getElementById("categoryModalLabel");
     const btnAdd = document.getElementById("btnAddCategory");
 
@@ -51,19 +51,19 @@ document.addEventListener("DOMContentLoaded", () => {
             const categories = await getCategories();
             tableBody.innerHTML = ""; //Vaciamos la tabla 
 
-            if (!categories || categories.lenght == 0) {
-                tableBody, innerHTML = '<td colspan="5"> Actualmente no hay registros</td>';
+            if (!categories || categories.length == 0) {
+                tableBody.innerHTML = '<tr><td colspan="5"> Actualmente no hay registros</td></tr>';
                 return; //Evitamos que se ejecute el resto del código
             }
-            categories.forEach((cat)=>{
+            categories.forEach((cat) => {
                 const tr = document.createElement("tr"); //Se crear el elemento con JS
                 tr.innerHTML = `
                 <td>${cat.idCategoria}</td>
                 <td>${cat.nombreCategoria}</td>
-                <td>4${cat.descripcion}</td>
+                <td>${cat.descripcion}</td>
                 <td>${cat.fechaCreacion}</td>
                 <td>
-                <button class="btn btn-sm btn-outline-secundary edit-btn">
+                <button class="btn btn-sm btn-outline-secondary edit-btn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -88,8 +88,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 `;
 
                 //Funcionalidad para botones de Editar
-                tr.querySelector(".edit-btn").addEventListener("click", ()=>{
-                    form.categoryId.value = cat-idCategoria;
+                tr.querySelector(".edit-btn").addEventListener("click", () => {
+                    form.categoryId.value = cat.idCategoria;
                     form.categoryName.value = cat.nombreCategoria;
                     form.categoryDescription.value = cat.descripcion;
                     lblModal.textContent = "Editar Categoria"
@@ -99,20 +99,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
 
                 //Funcionalidad para botones de Eliminar
-                tr.querySelector(".delete-btn").addEventListener("click", ()=>{
-                    if(confirm("¿Desea eliminar la categoría?")){
+                tr.querySelector(".delete-btn").addEventListener("click", () => {
+                    if (confirm("¿Desea eliminar la categoría?")) {
                         deleteCategory(cat.idCategoria).then(loadCategories);
                     }
                 });
 
-                tableBody.appendChild(id) //Al Tbody se le concatena la nueva fila creada
+                tableBody.appendChild(tr); //Al Tbody se le concatena la nueva fila creada
             });
         }
-        catch(err){
+        catch (err) {
             console.error("Error cargando categorías: ", err);
         }
-        function init(){
-            loadCategories();
-        }
-    }   
+    }
+
+    function init() {
+        loadCategories();
+    }
 });
